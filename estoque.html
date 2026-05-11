@@ -1,769 +1,304 @@
+<!-- VERSÃO 2.1 CORRIGIDA -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Almoxarifado TG 2.0</title>
+<title>Almoxarifado TG 2.1</title>
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
-body{
-background:#1b1f1b;
-color:white;
-}
-
-header{
-background:#3b5323;
-padding:15px;
-text-align:center;
-font-size:22px;
-font-weight:bold;
-}
-
-.container{
-display:flex;
-}
-
-.sidebar{
-width:230px;
-background:#2e3d2e;
-min-height:100vh;
-}
-
-.sidebar button{
-width:100%;
-padding:15px;
-background:none;
-border:none;
-color:white;
-text-align:left;
-cursor:pointer;
-font-size:15px;
-}
-
-.sidebar button:hover{
-background:#3b5323;
-}
-
-.content{
-flex:1;
-padding:20px;
-}
-
-.card{
-background:#2e3d2e;
-padding:20px;
-border-radius:10px;
-margin-bottom:20px;
-}
-
-input,select{
-width:100%;
-padding:10px;
-margin:5px 0;
-border:none;
-border-radius:5px;
-}
-
-button.action{
-background:#4caf50;
-border:none;
-padding:10px;
-color:white;
-cursor:pointer;
-border-radius:5px;
-margin-top:10px;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-th,td{
-border:1px solid #555;
-padding:8px;
-}
-
-.alerta{
-color:#ffd700;
-font-weight:bold;
-}
-
-.dashboard-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:15px;
-}
-
-.dashboard-box{
-background:#3b5323;
-padding:20px;
-border-radius:10px;
-text-align:center;
-font-size:18px;
-}
-
+body{margin:0;font-family:Arial;background:#1b1f1b;color:white}
+header{background:#3b5323;padding:15px;text-align:center;font-size:22px}
+.container{display:flex}
+.sidebar{width:230px;background:#2e3d2e;min-height:100vh}
+.sidebar button{width:100%;padding:12px;background:none;border:none;color:white;text-align:left;cursor:pointer}
+.sidebar button:hover{background:#3b5323}
+.content{flex:1;padding:20px}
+.card{background:#2e3d2e;padding:15px;border-radius:8px;margin-bottom:15px}
+input,select{width:100%;padding:8px;margin:5px 0;border-radius:5px;border:none}
+button.action{background:#4caf50;border:none;padding:10px;color:white;cursor:pointer;border-radius:5px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #555;padding:8px}
+.alerta{color:yellow;font-weight:bold}
 </style>
 </head>
 
 <body>
 
-<header>
-Sistema de Almoxarifado TG 2.0
-</header>
+<header>Sistema TG 2.1</header>
 
 <div class="container">
 
 <div class="sidebar">
-
 <button onclick="show('dashboard')">📊 Dashboard</button>
-<button onclick="show('atiradores')">👤 Atiradores</button>
+<button onclick="show('pessoas')">👤 Pessoas</button>
 <button onclick="show('estoque')">📦 Estoque</button>
 <button onclick="show('mov')">🔄 Movimentação</button>
 <button onclick="show('posse')">🎯 Em uso</button>
 <button onclick="show('historico')">📜 Histórico</button>
-<button onclick="window.location.href='index.html'">🚪 Sair</button>
-
 </div>
-
 
 <div class="content">
 
-
+<!-- DASH -->
 <div id="dashboard" class="page">
-
-<div class="dashboard-grid">
-
-<div class="dashboard-box">
-Atiradores
-<h2 id="dashAtiradores">0</h2>
-</div>
-
-<div class="dashboard-box">
-Itens
-<h2 id="dashItens">0</h2>
-</div>
-
-<div class="dashboard-box">
-Movimentações
-<h2 id="dashMov">0</h2>
-</div>
-
-<div class="dashboard-box">
-Em uso
-<h2 id="dashUso">0</h2>
-</div>
-
-</div>
-
-</div>
-
-
-
-<div id="atiradores" class="page" style="display:none">
-
 <div class="card">
+<h2>Resumo</h2>
+<p>Itens: <span id="dItens"></span></p>
+<p>Pessoas: <span id="dPessoas"></span></p>
+<p>Movimentações: <span id="dMov"></span></p>
+</div>
+</div>
 
-<h2>Cadastrar Atirador</h2>
+<!-- PESSOAS -->
+<div id="pessoas" class="page" style="display:none">
+<div class="card">
+<h2>Cadastrar Pessoa</h2>
 
-<input id="nomeAtirador" placeholder="Nome">
-<input id="numeroAtirador" placeholder="Número">
+<input id="nomePessoa" placeholder="Nome">
 
-<button class="action" onclick="addAtirador()">
-Cadastrar
-</button>
+<select id="funcaoPessoa">
+<option>Atirador</option>
+<option>Limpeza</option>
+<option>Instrutor</option>
+<option>Outro</option>
+</select>
 
+<input id="numeroPessoa" placeholder="Número (se for atirador)">
+
+<button class="action" onclick="addPessoa()">Cadastrar</button>
 </div>
 
 <div class="card">
-<ul id="listaAtiradores"></ul>
+<ul id="listaPessoas"></ul>
+</div>
 </div>
 
-</div>
-
-
-
+<!-- ESTOQUE -->
 <div id="estoque" class="page" style="display:none">
 
 <div class="card">
-
 <h2>Cadastrar Item</h2>
 
 <input id="nomeItem" placeholder="Nome">
 
 <select id="tipoItem">
-
 <option>Armamento</option>
 <option>Fardamento</option>
 <option>Equipamento</option>
-
+<option>Produto de Limpeza</option>
+<option>Outro</option>
 </select>
 
 <input id="qtdItem" type="number" placeholder="Quantidade">
 
-<button class="action" onclick="addItem()">
-Cadastrar
-</button>
-
+<button class="action" onclick="addItem()">Cadastrar</button>
 </div>
 
-
 <div class="card">
-
-<input
-id="pesquisa"
-placeholder="Pesquisar item..."
-onkeyup="atualizarTudo()"
->
-
 <table>
-
 <thead>
-
-<tr>
-<th>ID</th>
-<th>Item</th>
-<th>Tipo</th>
-<th>Qtd</th>
-<th>Ações</th>
-</tr>
-
+<tr><th>Item</th><th>Tipo</th><th>Qtd</th><th>Ações</th></tr>
 </thead>
-
 <tbody id="tabelaEstoque"></tbody>
-
 </table>
-
 </div>
 
 </div>
 
-
-
-
+<!-- MOV -->
 <div id="mov" class="page" style="display:none">
-
 <div class="card">
+
+<h3>Registrar retirada ou devolução</h3>
 
 <select id="selItem"></select>
+<select id="selPessoa"></select>
 
-<select id="selAtirador"></select>
-
-<input id="qtdMov" type="number">
+<input id="qtdMov" type="number" placeholder="Quantidade">
 
 <select id="tipoMov">
-
 <option value="saida">Retirada</option>
 <option value="entrada">Devolução</option>
-
 </select>
 
-<button class="action" onclick="movimentar()">
-Registrar
-</button>
+<button class="action" onclick="movimentar()">Registrar</button>
 
 </div>
-
 </div>
 
-
-
-
+<!-- POSSE -->
 <div id="posse" class="page" style="display:none">
-
 <div class="card">
-
-<h2>Itens em uso</h2>
-
 <table>
-
 <thead>
-<tr>
-<th>Atirador</th>
-<th>Item</th>
-<th>Qtd</th>
-</tr>
+<tr><th>Pessoa</th><th>Item</th><th>Qtd</th><th>Ações</th></tr>
 </thead>
-
 <tbody id="tabelaPosse"></tbody>
-
 </table>
-
+</div>
 </div>
 
-</div>
-
-
-
-
+<!-- HIST -->
 <div id="historico" class="page" style="display:none">
-
 <div class="card">
-
 <table>
-
 <thead>
-<tr>
-<th>Atirador</th>
-<th>Item</th>
-<th>Qtd</th>
-<th>Tipo</th>
-<th>Data</th>
-<th>Ações</th>
-</tr>
+<tr><th>Pessoa</th><th>Item</th><th>Qtd</th><th>Tipo</th><th>Data</th></tr>
 </thead>
-
 <tbody id="tabelaHist"></tbody>
-
 </table>
-
 </div>
-
 </div>
 
 </div>
 </div>
-
 
 <script>
 
-let estoque =
-JSON.parse(localStorage.getItem("estoque")) || [];
-
-let atiradores =
-JSON.parse(localStorage.getItem("atiradores")) || [];
-
-let historico =
-JSON.parse(localStorage.getItem("historico")) || [];
-
-let posse =
-JSON.parse(localStorage.getItem("posse")) || [];
-
+let estoque = JSON.parse(localStorage.getItem("estoque"))||[];
+let pessoas = JSON.parse(localStorage.getItem("pessoas"))||[];
+let historico = JSON.parse(localStorage.getItem("historico"))||[];
+let posse = JSON.parse(localStorage.getItem("posse"))||[];
 
 function salvar(){
-
 localStorage.setItem("estoque",JSON.stringify(estoque));
-localStorage.setItem("atiradores",JSON.stringify(atiradores));
+localStorage.setItem("pessoas",JSON.stringify(pessoas));
 localStorage.setItem("historico",JSON.stringify(historico));
 localStorage.setItem("posse",JSON.stringify(posse));
-
 }
-
-
 
 function show(id){
-
-document
-.querySelectorAll(".page")
-.forEach(p=>p.style.display="none");
-
-document
-.getElementById(id)
-.style.display="block";
-
-atualizarTudo();
-
+document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+document.getElementById(id).style.display="block";
+atualizar();
 }
 
-
-
-function gerarID(tipo){
-
-let prefixo="EQP";
-
-if(tipo=="Armamento") prefixo="ARM";
-if(tipo=="Fardamento") prefixo="FAR";
-
-return prefixo+"-"+Date.now();
-
-}
-
-
-
-function addAtirador(){
-
-if(!nomeAtirador.value) return;
-
-atiradores.push({
-
-nome:nomeAtirador.value,
-numero:numeroAtirador.value
-
+function addPessoa(){
+pessoas.push({
+nome:nomePessoa.value,
+funcao:funcaoPessoa.value,
+numero:numeroPessoa.value
 });
-
 salvar();
-atualizarTudo();
-
+atualizar();
 }
-
-
 
 function addItem(){
 
+let nome=nomeItem.value;
 let tipo=tipoItem.value;
+let qtd=parseInt(qtdItem.value);
 
-estoque.push({
+let existente=estoque.find(e=>e.nome==nome);
 
-id:gerarID(tipo),
-
-nome:nomeItem.value,
-
-tipo,
-
-qtd:parseInt(qtdItem.value)
-
-});
-
-salvar();
-atualizarTudo();
-
+if(existente){
+existente.qtd+=qtd;
+}else{
+estoque.push({nome,tipo,qtd,original:qtd});
 }
 
-
+salvar();
+atualizar();
+}
 
 function movimentar(){
 
 let item=estoque[selItem.value];
+let pessoa=pessoas[selPessoa.value];
+let qtd=parseInt(qtdMov.value);
 
-let atirador=
-atiradores[selAtirador.value];
-
-let qtd=
-parseInt(qtdMov.value);
-
-let tipo=
-tipoMov.value;
-
-
-if(tipo=="saida"){
-
-if(item.qtd<qtd){
-
-alert("Sem estoque");
-return;
-
-}
+if(tipoMov.value=="saida"){
+if(item.qtd<qtd)return alert("Sem estoque");
 
 item.qtd-=qtd;
 
-posse.push({
-
-atirador:atirador.nome,
-
-item:item.nome,
-
-qtd
-
-});
-
+posse.push({pessoa:pessoa.nome,item:item.nome,qtd});
 }
 
-
-if(tipo=="entrada"){
-
+if(tipoMov.value=="entrada"){
 item.qtd+=qtd;
-
 }
-
 
 historico.push({
-
-atirador:atirador.nome,
-
+pessoa:pessoa.nome,
 item:item.nome,
-
 qtd,
-
-tipo,
-
+tipo:tipoMov.value,
 data:new Date().toLocaleString()
-
 });
-
 
 salvar();
-atualizarTudo();
-
+atualizar();
 }
 
+function atualizar(){
 
+dItens.innerHTML=estoque.length;
+dPessoas.innerHTML=pessoas.length;
+dMov.innerHTML=historico.length;
 
-function atualizarTudo(){
-
-
-dashAtiradores.innerHTML=
-atiradores.length;
-
-dashItens.innerHTML=
-estoque.length;
-
-dashMov.innerHTML=
-historico.length;
-
-dashUso.innerHTML=
-posse.length;
-
-
-
-listaAtiradores.innerHTML="";
-
-atiradores.forEach((a,index)=>{
-
-listaAtiradores.innerHTML+=`
-
-<li>
-
-${a.nome} (${a.numero})
-
-<button onclick="editarAtirador(${index})">
-✏️
-</button>
-
-<button onclick="excluirAtirador(${index})">
-🗑️
-</button>
-
-</li>
-
-`;
-
+listaPessoas.innerHTML="";
+pessoas.forEach((p,i)=>{
+listaPessoas.innerHTML+=`
+<li>${p.nome} - ${p.funcao}
+<button onclick="pessoas.splice(${i},1);salvar();atualizar()">🗑️</button>
+</li>`;
 });
-
-
-
-let busca=
-pesquisa ? pesquisa.value.toLowerCase() : "";
-
 
 tabelaEstoque.innerHTML="";
-
-estoque.forEach((e,index)=>{
-
-if(!e.nome.toLowerCase().includes(busca))
-return;
-
-
-let alerta=
-e.qtd<5
-? "<span class='alerta'>⚠ baixo</span>"
-: "";
-
-
-tabelaEstoque.innerHTML+=`
-
-<tr>
-
-<td>${e.id}</td>
-
-<td>${e.nome}</td>
-
-<td>${e.tipo}</td>
-
-<td>${e.qtd} ${alerta}</td>
-
-<td>
-
-<button onclick="editarItem(${index})">
-✏️
-</button>
-
-<button onclick="excluirItem(${index})">
-🗑️
-</button>
-
-</td>
-
-</tr>
-
-`;
-
-});
-
-
-
-selItem.innerHTML="";
-
 estoque.forEach((e,i)=>{
 
-selItem.innerHTML+=`
-<option value="${i}">
-${e.nome}
-</option>
-`;
+let alerta=(e.qtd<e.original)?"<span class='alerta'>⚠</span>":"";
 
+tabelaEstoque.innerHTML+=`
+<tr>
+<td>${e.nome}</td>
+<td>${e.tipo}</td>
+<td>${e.qtd} ${alerta}</td>
+<td>
+<button onclick="estoque.splice(${i},1);salvar();atualizar()">🗑️</button>
+</td>
+</tr>`;
 });
 
-
-
-selAtirador.innerHTML="";
-
-atiradores.forEach((a,i)=>{
-
-selAtirador.innerHTML+=`
-<option value="${i}">
-${a.nome}
-</option>
-`;
-
+selItem.innerHTML="";
+estoque.forEach((e,i)=>{
+selItem.innerHTML+=`<option value="${i}">${e.nome}</option>`;
 });
 
-
+selPessoa.innerHTML="";
+pessoas.forEach((p,i)=>{
+selPessoa.innerHTML+=`<option value="${i}">${p.nome}</option>`;
+});
 
 tabelaPosse.innerHTML="";
-
-posse.forEach(p=>{
-
+posse.forEach((p,i)=>{
 tabelaPosse.innerHTML+=`
-
 <tr>
-
-<td>${p.atirador}</td>
-
+<td>${p.pessoa}</td>
 <td>${p.item}</td>
-
 <td>${p.qtd}</td>
-
-</tr>
-
-`;
-
+<td>
+<button onclick="posse.splice(${i},1);salvar();atualizar()">🗑️</button>
+</td>
+</tr>`;
 });
 
-
-
 tabelaHist.innerHTML="";
-
-historico.forEach((h,index)=>{
-
+historico.forEach(h=>{
 tabelaHist.innerHTML+=`
-
 <tr>
-
-<td>${h.atirador}</td>
+<td>${h.pessoa}</td>
 <td>${h.item}</td>
 <td>${h.qtd}</td>
 <td>${h.tipo}</td>
 <td>${h.data}</td>
-
-<td>
-
-<button onclick="editarHistorico(${index})">
-✏️
-</button>
-
-<button onclick="excluirHistorico(${index})">
-🗑️
-</button>
-
-</td>
-
-</tr>
-
-`;
-
+</tr>`;
 });
 
 }
 
-
-function excluirAtirador(i){
-
-atiradores.splice(i,1);
-
-salvar();
-atualizarTudo();
-
-}
-
-
-function editarAtirador(i){
-
-let nome=
-prompt(
-"Novo nome",
-atiradores[i].nome
-);
-
-if(nome){
-
-atiradores[i].nome=nome;
-
-salvar();
-atualizarTudo();
-
-}
-
-}
-
-
-function excluirItem(i){
-
-estoque.splice(i,1);
-
-salvar();
-atualizarTudo();
-
-}
-
-
-function editarItem(i){
-
-let nome=
-prompt(
-"Novo nome",
-estoque[i].nome
-);
-
-if(nome){
-
-estoque[i].nome=nome;
-
-salvar();
-atualizarTudo();
-
-}
-
-}
-
-
-function excluirHistorico(i){
-
-historico.splice(i,1);
-
-salvar();
-atualizarTudo();
-
-}
-
-
-function editarHistorico(i){
-
-let qtd=
-prompt(
-"Nova quantidade",
-historico[i].qtd
-);
-
-if(qtd){
-
-historico[i].qtd=qtd;
-
-salvar();
-atualizarTudo();
-
-}
-
-}
-
-
-atualizarTudo();
+atualizar();
 
 </script>
 
