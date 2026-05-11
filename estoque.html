@@ -2,265 +2,331 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Almoxarifado TG</title>
+<title>Almoxarifado TG 2.0</title>
 
 <style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
 body{
-  margin:0;
-  font-family:Arial;
-  background:#1b1f1b;
-  color:#fff;
+background:#1b1f1b;
+color:white;
 }
 
 header{
-  background:#3b5323;
-  padding:15px;
-  text-align:center;
-  font-size:20px;
-  font-weight:bold;
+background:#3b5323;
+padding:15px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
 }
 
 .container{
-  display:flex;
+display:flex;
 }
 
 .sidebar{
-  width:220px;
-  background:#2e3d2e;
-  height:100vh;
+width:230px;
+background:#2e3d2e;
+min-height:100vh;
 }
 
 .sidebar button{
-  width:100%;
-  padding:12px;
-  background:none;
-  border:none;
-  color:white;
-  text-align:left;
-  cursor:pointer;
+width:100%;
+padding:15px;
+background:none;
+border:none;
+color:white;
+text-align:left;
+cursor:pointer;
+font-size:15px;
 }
 
 .sidebar button:hover{
-  background:#3b5323;
+background:#3b5323;
 }
 
 .content{
-  flex:1;
-  padding:20px;
+flex:1;
+padding:20px;
 }
 
 .card{
-  background:#2e3d2e;
-  padding:15px;
-  border-radius:8px;
-  margin-bottom:15px;
+background:#2e3d2e;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
 }
 
 input,select{
-  width:100%;
-  padding:8px;
-  margin:5px 0;
-  border:none;
-  border-radius:5px;
+width:100%;
+padding:10px;
+margin:5px 0;
+border:none;
+border-radius:5px;
 }
 
 button.action{
-  background:#4caf50;
-  border:none;
-  padding:10px;
-  color:white;
-  cursor:pointer;
-  border-radius:5px;
+background:#4caf50;
+border:none;
+padding:10px;
+color:white;
+cursor:pointer;
+border-radius:5px;
+margin-top:10px;
 }
 
 table{
-  width:100%;
-  border-collapse:collapse;
+width:100%;
+border-collapse:collapse;
 }
 
 th,td{
-  border:1px solid #555;
-  padding:8px;
+border:1px solid #555;
+padding:8px;
 }
 
-td button{
-  margin-right:5px;
+.alerta{
+color:#ffd700;
+font-weight:bold;
 }
+
+.dashboard-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:15px;
+}
+
+.dashboard-box{
+background:#3b5323;
+padding:20px;
+border-radius:10px;
+text-align:center;
+font-size:18px;
+}
+
 </style>
 </head>
 
 <body>
 
-<header>Sistema de Almoxarifado - Tiro de Guerra</header>
+<header>
+Sistema de Almoxarifado TG 2.0
+</header>
 
 <div class="container">
 
 <div class="sidebar">
 
-  <button onclick="show('dashboard')">
-    Dashboard
-  </button>
-
-  <button onclick="show('atiradores')">
-    Atiradores
-  </button>
-
-  <button onclick="show('estoque')">
-    Estoque
-  </button>
-
-  <button onclick="show('mov')">
-    Movimentação
-  </button>
-
-  <button onclick="show('historico')">
-    Histórico
-  </button>
-
-  <button onclick="window.location.href='index.html'">
-    Deslogar
-  </button>
+<button onclick="show('dashboard')">📊 Dashboard</button>
+<button onclick="show('atiradores')">👤 Atiradores</button>
+<button onclick="show('estoque')">📦 Estoque</button>
+<button onclick="show('mov')">🔄 Movimentação</button>
+<button onclick="show('posse')">🎯 Em uso</button>
+<button onclick="show('historico')">📜 Histórico</button>
+<button onclick="window.location.href='index.html'">🚪 Sair</button>
 
 </div>
 
+
 <div class="content">
 
-  <div id="dashboard" class="page">
-    <div class="card">
-      <h2>Bem-vindo</h2>
-      <p>Sistema simples e funcional de controle de almoxarifado.</p>
-    </div>
-  </div>
 
-  <div id="atiradores" class="page" style="display:none">
+<div id="dashboard" class="page">
 
-    <div class="card">
-      <h2>Cadastrar Atirador</h2>
+<div class="dashboard-grid">
 
-      <input id="nomeAtirador" placeholder="Nome">
-      <input id="numeroAtirador" placeholder="Número">
+<div class="dashboard-box">
+Atiradores
+<h2 id="dashAtiradores">0</h2>
+</div>
 
-      <button class="action" onclick="addAtirador()">
-        Cadastrar
-      </button>
-    </div>
+<div class="dashboard-box">
+Itens
+<h2 id="dashItens">0</h2>
+</div>
 
-    <div class="card">
-      <h2>Lista</h2>
-      <ul id="listaAtiradores"></ul>
-    </div>
+<div class="dashboard-box">
+Movimentações
+<h2 id="dashMov">0</h2>
+</div>
 
-  </div>
+<div class="dashboard-box">
+Em uso
+<h2 id="dashUso">0</h2>
+</div>
 
+</div>
 
-  <div id="estoque" class="page" style="display:none">
-
-    <div class="card">
-
-      <h2>Cadastrar Item</h2>
-
-      <input id="nomeItem" placeholder="Nome">
-
-      <select id="tipoItem">
-        <option>Armamento</option>
-        <option>Fardamento</option>
-        <option>Roupa TFM</option>
-        <option>Boina</option>
-        <option>Coturno</option>
-        <option>Produto de Limpeza</option>
-      </select>
-
-      <input
-        id="qtdItem"
-        type="number"
-        placeholder="Quantidade"
-      >
-
-      <button class="action" onclick="addItem()">
-        Cadastrar
-      </button>
-
-    </div>
+</div>
 
 
-    <div class="card">
 
-      <h2>Estoque</h2>
+<div id="atiradores" class="page" style="display:none">
 
-      <table>
+<div class="card">
 
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Tipo</th>
-            <th>Qtd</th>
-          </tr>
-        </thead>
+<h2>Cadastrar Atirador</h2>
 
-        <tbody id="tabelaEstoque"></tbody>
+<input id="nomeAtirador" placeholder="Nome">
+<input id="numeroAtirador" placeholder="Número">
 
-      </table>
+<button class="action" onclick="addAtirador()">
+Cadastrar
+</button>
 
-    </div>
+</div>
 
-  </div>
+<div class="card">
+<ul id="listaAtiradores"></ul>
+</div>
 
-
-  <div id="mov" class="page" style="display:none">
-
-    <div class="card">
-
-      <h2>Movimentação</h2>
-
-      <select id="selItem"></select>
-
-      <select id="selAtirador"></select>
-
-      <input
-        id="qtdMov"
-        type="number"
-        placeholder="Quantidade"
-      >
-
-      <select id="tipoMov">
-        <option value="saida">Retirada</option>
-        <option value="entrada">Devolução</option>
-      </select>
-
-      <button class="action" onclick="movimentar()">
-        Registrar
-      </button>
-
-    </div>
-
-  </div>
+</div>
 
 
-  <div id="historico" class="page" style="display:none">
 
-    <div class="card">
+<div id="estoque" class="page" style="display:none">
 
-      <h2>Histórico</h2>
+<div class="card">
 
-      <table>
+<h2>Cadastrar Item</h2>
 
-        <thead>
-          <tr>
-            <th>Atirador</th>
-            <th>Item</th>
-            <th>Qtd</th>
-            <th>Tipo</th>
-            <th>Data</th>
-          </tr>
-        </thead>
+<input id="nomeItem" placeholder="Nome">
 
-        <tbody id="tabelaHist"></tbody>
+<select id="tipoItem">
 
-      </table>
+<option>Armamento</option>
+<option>Fardamento</option>
+<option>Equipamento</option>
 
-    </div>
+</select>
 
-  </div>
+<input id="qtdItem" type="number" placeholder="Quantidade">
+
+<button class="action" onclick="addItem()">
+Cadastrar
+</button>
+
+</div>
+
+
+<div class="card">
+
+<input
+id="pesquisa"
+placeholder="Pesquisar item..."
+onkeyup="atualizarTudo()"
+>
+
+<table>
+
+<thead>
+
+<tr>
+<th>ID</th>
+<th>Item</th>
+<th>Tipo</th>
+<th>Qtd</th>
+<th>Ações</th>
+</tr>
+
+</thead>
+
+<tbody id="tabelaEstoque"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+
+
+<div id="mov" class="page" style="display:none">
+
+<div class="card">
+
+<select id="selItem"></select>
+
+<select id="selAtirador"></select>
+
+<input id="qtdMov" type="number">
+
+<select id="tipoMov">
+
+<option value="saida">Retirada</option>
+<option value="entrada">Devolução</option>
+
+</select>
+
+<button class="action" onclick="movimentar()">
+Registrar
+</button>
+
+</div>
+
+</div>
+
+
+
+
+<div id="posse" class="page" style="display:none">
+
+<div class="card">
+
+<h2>Itens em uso</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Atirador</th>
+<th>Item</th>
+<th>Qtd</th>
+</tr>
+</thead>
+
+<tbody id="tabelaPosse"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+
+
+<div id="historico" class="page" style="display:none">
+
+<div class="card">
+
+<table>
+
+<thead>
+<tr>
+<th>Atirador</th>
+<th>Item</th>
+<th>Qtd</th>
+<th>Tipo</th>
+<th>Data</th>
+<th>Ações</th>
+</tr>
+</thead>
+
+<tbody id="tabelaHist"></tbody>
+
+</table>
+
+</div>
+
+</div>
 
 </div>
 </div>
@@ -269,396 +335,433 @@ td button{
 <script>
 
 let estoque =
-JSON.parse(localStorage.getItem('estoque')) || [];
+JSON.parse(localStorage.getItem("estoque")) || [];
 
 let atiradores =
-JSON.parse(localStorage.getItem('atiradores')) || [];
+JSON.parse(localStorage.getItem("atiradores")) || [];
 
 let historico =
-JSON.parse(localStorage.getItem('historico')) || [];
+JSON.parse(localStorage.getItem("historico")) || [];
+
+let posse =
+JSON.parse(localStorage.getItem("posse")) || [];
 
 
 function salvar(){
 
-  localStorage.setItem(
-    'estoque',
-    JSON.stringify(estoque)
-  );
-
-  localStorage.setItem(
-    'atiradores',
-    JSON.stringify(atiradores)
-  );
-
-  localStorage.setItem(
-    'historico',
-    JSON.stringify(historico)
-  );
+localStorage.setItem("estoque",JSON.stringify(estoque));
+localStorage.setItem("atiradores",JSON.stringify(atiradores));
+localStorage.setItem("historico",JSON.stringify(historico));
+localStorage.setItem("posse",JSON.stringify(posse));
 
 }
+
 
 
 function show(id){
 
-  document
-    .querySelectorAll('.page')
-    .forEach(
-      p => p.style.display='none'
-    );
+document
+.querySelectorAll(".page")
+.forEach(p=>p.style.display="none");
 
-  document
-    .getElementById(id)
-    .style.display='block';
+document
+.getElementById(id)
+.style.display="block";
 
-  atualizarTudo();
+atualizarTudo();
 
 }
+
+
+
+function gerarID(tipo){
+
+let prefixo="EQP";
+
+if(tipo=="Armamento") prefixo="ARM";
+if(tipo=="Fardamento") prefixo="FAR";
+
+return prefixo+"-"+Date.now();
+
+}
+
 
 
 function addAtirador(){
 
-  let nome = nomeAtirador.value;
-  let numero = numeroAtirador.value;
+if(!nomeAtirador.value) return;
 
-  if(!nome || !numero){
-    return alert("Preencha tudo");
-  }
+atiradores.push({
 
-  atiradores.push({
-    nome,
-    numero
-  });
+nome:nomeAtirador.value,
+numero:numeroAtirador.value
 
-  salvar();
+});
 
-  nomeAtirador.value='';
-  numeroAtirador.value='';
-
-  atualizarTudo();
+salvar();
+atualizarTudo();
 
 }
+
 
 
 function addItem(){
 
-  let nome = nomeItem.value;
-  let tipo = tipoItem.value;
-  let qtd = parseInt(qtdItem.value);
+let tipo=tipoItem.value;
 
-  if(!nome || !qtd){
-    return alert("Preencha tudo");
-  }
+estoque.push({
 
-  estoque.push({
-    nome,
-    tipo,
-    qtd
-  });
+id:gerarID(tipo),
 
-  salvar();
+nome:nomeItem.value,
 
-  atualizarTudo();
+tipo,
+
+qtd:parseInt(qtdItem.value)
+
+});
+
+salvar();
+atualizarTudo();
 
 }
+
 
 
 function movimentar(){
 
-  let i = selItem.value;
-  let a = selAtirador.value;
-  let qtd = parseInt(qtdMov.value);
-  let tipo = tipoMov.value;
+let item=estoque[selItem.value];
 
-  if(!qtd){
-    return alert("Quantidade inválida");
-  }
+let atirador=
+atiradores[selAtirador.value];
 
-  if(tipo=="saida"){
+let qtd=
+parseInt(qtdMov.value);
 
-    if(estoque[i].qtd < qtd){
-      return alert("Sem estoque");
-    }
+let tipo=
+tipoMov.value;
 
-    estoque[i].qtd -= qtd;
 
-  }else{
+if(tipo=="saida"){
 
-    estoque[i].qtd += qtd;
+if(item.qtd<qtd){
 
-  }
-
-  historico.push({
-
-    atirador: atiradores[a].nome,
-
-    item: estoque[i].nome,
-
-    qtd,
-
-    tipo,
-
-    data: new Date().toLocaleString()
-
-  });
-
-  salvar();
-
-  atualizarTudo();
+alert("Sem estoque");
+return;
 
 }
+
+item.qtd-=qtd;
+
+posse.push({
+
+atirador:atirador.nome,
+
+item:item.nome,
+
+qtd
+
+});
+
+}
+
+
+if(tipo=="entrada"){
+
+item.qtd+=qtd;
+
+}
+
+
+historico.push({
+
+atirador:atirador.nome,
+
+item:item.nome,
+
+qtd,
+
+tipo,
+
+data:new Date().toLocaleString()
+
+});
+
+
+salvar();
+atualizarTudo();
+
+}
+
 
 
 function atualizarTudo(){
 
-   // ESTOQUE
-  tabelaEstoque.innerHTML='';
 
-  estoque.forEach((e,index)=>{
+dashAtiradores.innerHTML=
+atiradores.length;
 
-    tabelaEstoque.innerHTML += `
-      <tr>
+dashItens.innerHTML=
+estoque.length;
 
-        <td>${e.nome}</td>
+dashMov.innerHTML=
+historico.length;
 
-        <td>${e.tipo}</td>
+dashUso.innerHTML=
+posse.length;
 
-        <td>${e.qtd}</td>
 
-        <td>
 
-          <button onclick="editarItem(${index})">
-            ✏️
-          </button>
+listaAtiradores.innerHTML="";
 
-          <button onclick="excluirItem(${index})">
-            🗑️
-          </button>
+atiradores.forEach((a,index)=>{
 
-        </td>
+listaAtiradores.innerHTML+=`
 
-      </tr>
-    `;
+<li>
 
-  });
+${a.nome} (${a.numero})
 
+<button onclick="editarAtirador(${index})">
+✏️
+</button>
 
+<button onclick="excluirAtirador(${index})">
+🗑️
+</button>
 
-  // ATIRADORES
-  listaAtiradores.innerHTML='';
+</li>
 
-  atiradores.forEach((a,index)=>{
+`;
 
-    listaAtiradores.innerHTML += `
-      <li>
+});
 
-        ${a.nome} (${a.numero})
 
-        <button onclick="editarAtirador(${index})">
-          ✏️
-        </button>
 
-        <button onclick="excluirAtirador(${index})">
-          🗑️
-        </button>
+let busca=
+pesquisa ? pesquisa.value.toLowerCase() : "";
 
-      </li>
-    `;
 
-  });
+tabelaEstoque.innerHTML="";
 
+estoque.forEach((e,index)=>{
 
+if(!e.nome.toLowerCase().includes(busca))
+return;
 
-  // SELECT ITEM
-  selItem.innerHTML='';
 
-  estoque.forEach((e,i)=>{
+let alerta=
+e.qtd<5
+? "<span class='alerta'>⚠ baixo</span>"
+: "";
 
-    selItem.innerHTML += `
-      <option value="${i}">
-        ${e.nome}
-      </option>
-    `;
 
-  });
+tabelaEstoque.innerHTML+=`
 
+<tr>
 
+<td>${e.id}</td>
 
-  // SELECT ATIRADOR
-  selAtirador.innerHTML='';
+<td>${e.nome}</td>
 
-  atiradores.forEach((a,i)=>{
+<td>${e.tipo}</td>
 
-    selAtirador.innerHTML += `
-      <option value="${i}">
-        ${a.nome}
-      </option>
-    `;
+<td>${e.qtd} ${alerta}</td>
 
-  });
+<td>
 
+<button onclick="editarItem(${index})">
+✏️
+</button>
 
+<button onclick="excluirItem(${index})">
+🗑️
+</button>
 
-  // HISTÓRICO
-  tabelaHist.innerHTML='';
+</td>
 
-  historico.forEach((h,index)=>{
+</tr>
 
-    tabelaHist.innerHTML += `
-      <tr>
+`;
 
-        <td>${h.atirador}</td>
+});
 
-        <td>${h.item}</td>
 
-        <td>${h.qtd}</td>
 
-        <td>${h.tipo}</td>
+selItem.innerHTML="";
 
-        <td>${h.data}</td>
+estoque.forEach((e,i)=>{
 
-        <td>
+selItem.innerHTML+=`
+<option value="${i}">
+${e.nome}
+</option>
+`;
 
-          <button onclick="editarHistorico(${index})">
-            ✏️
-          </button>
+});
 
-          <button onclick="excluirHistorico(${index})">
-            🗑️
-          </button>
 
-        </td>
 
-      </tr>
-    `;
+selAtirador.innerHTML="";
 
-  });
+atiradores.forEach((a,i)=>{
 
-}
-  // ATIRADORES
+selAtirador.innerHTML+=`
+<option value="${i}">
+${a.nome}
+</option>
+`;
 
-function excluirAtirador(index){
+});
 
-  if(confirm("Excluir atirador?")){
 
-    atiradores.splice(index,1);
 
-    salvar();
+tabelaPosse.innerHTML="";
 
-    atualizarTudo();
+posse.forEach(p=>{
 
-  }
+tabelaPosse.innerHTML+=`
 
-}
+<tr>
 
+<td>${p.atirador}</td>
 
-function editarAtirador(index){
+<td>${p.item}</td>
 
-  let novoNome = prompt(
-    "Novo nome:",
-    atiradores[index].nome
-  );
+<td>${p.qtd}</td>
 
-  let novoNumero = prompt(
-    "Novo número:",
-    atiradores[index].numero
-  );
+</tr>
 
-  if(novoNome && novoNumero){
+`;
 
-    atiradores[index].nome = novoNome;
+});
 
-    atiradores[index].numero = novoNumero;
 
-    salvar();
 
-    atualizarTudo();
+tabelaHist.innerHTML="";
 
-  }
+historico.forEach((h,index)=>{
 
-}
+tabelaHist.innerHTML+=`
 
+<tr>
 
+<td>${h.atirador}</td>
+<td>${h.item}</td>
+<td>${h.qtd}</td>
+<td>${h.tipo}</td>
+<td>${h.data}</td>
 
-// ESTOQUE
+<td>
 
-function excluirItem(index){
+<button onclick="editarHistorico(${index})">
+✏️
+</button>
 
-  if(confirm("Excluir item?")){
+<button onclick="excluirHistorico(${index})">
+🗑️
+</button>
 
-    estoque.splice(index,1);
+</td>
 
-    salvar();
+</tr>
 
-    atualizarTudo();
+`;
 
-  }
+});
 
 }
 
 
-function editarItem(index){
+function excluirAtirador(i){
 
-  let novoNome = prompt(
-    "Novo nome:",
-    estoque[index].nome
-  );
+atiradores.splice(i,1);
 
-  let novaQtd = prompt(
-    "Nova quantidade:",
-    estoque[index].qtd
-  );
-
-  if(novoNome && novaQtd){
-
-    estoque[index].nome = novoNome;
-
-    estoque[index].qtd = parseInt(novaQtd);
-
-    salvar();
-
-    atualizarTudo();
-
-  }
+salvar();
+atualizarTudo();
 
 }
 
 
+function editarAtirador(i){
 
-// HISTÓRICO
+let nome=
+prompt(
+"Novo nome",
+atiradores[i].nome
+);
 
-function excluirHistorico(index){
+if(nome){
 
-  if(confirm("Excluir registro?")){
+atiradores[i].nome=nome;
 
-    historico.splice(index,1);
+salvar();
+atualizarTudo();
 
-    salvar();
-
-    atualizarTudo();
-
-  }
+}
 
 }
 
 
-function editarHistorico(index){
+function excluirItem(i){
 
-  let novaQtd = prompt(
-    "Nova quantidade:",
-    historico[index].qtd
-  );
+estoque.splice(i,1);
 
-  if(novaQtd){
-
-    historico[index].qtd = parseInt(novaQtd);
-
-    salvar();
-
-    atualizarTudo();
-
-  }
+salvar();
+atualizarTudo();
 
 }
+
+
+function editarItem(i){
+
+let nome=
+prompt(
+"Novo nome",
+estoque[i].nome
+);
+
+if(nome){
+
+estoque[i].nome=nome;
+
+salvar();
+atualizarTudo();
+
+}
+
+}
+
+
+function excluirHistorico(i){
+
+historico.splice(i,1);
+
+salvar();
+atualizarTudo();
+
+}
+
+
+function editarHistorico(i){
+
+let qtd=
+prompt(
+"Nova quantidade",
+historico[i].qtd
+);
+
+if(qtd){
+
+historico[i].qtd=qtd;
+
+salvar();
+atualizarTudo();
+
+}
+
+}
+
 
 atualizarTudo();
 
