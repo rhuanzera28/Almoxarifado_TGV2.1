@@ -410,34 +410,65 @@ function movimentar(){
 
 function atualizarTudo(){
 
+   // ESTOQUE
   tabelaEstoque.innerHTML='';
 
-  estoque.forEach(e=>{
+  estoque.forEach((e,index)=>{
 
     tabelaEstoque.innerHTML += `
       <tr>
+
         <td>${e.nome}</td>
+
         <td>${e.tipo}</td>
+
         <td>${e.qtd}</td>
+
+        <td>
+
+          <button onclick="editarItem(${index})">
+            ✏️
+          </button>
+
+          <button onclick="excluirItem(${index})">
+            🗑️
+          </button>
+
+        </td>
+
       </tr>
     `;
 
   });
 
 
+
+  // ATIRADORES
   listaAtiradores.innerHTML='';
 
-  atiradores.forEach(a=>{
+  atiradores.forEach((a,index)=>{
 
     listaAtiradores.innerHTML += `
       <li>
+
         ${a.nome} (${a.numero})
+
+        <button onclick="editarAtirador(${index})">
+          ✏️
+        </button>
+
+        <button onclick="excluirAtirador(${index})">
+          🗑️
+        </button>
+
       </li>
     `;
 
   });
 
 
+
+  // SELECT ITEM
   selItem.innerHTML='';
 
   estoque.forEach((e,i)=>{
@@ -451,6 +482,8 @@ function atualizarTudo(){
   });
 
 
+
+  // SELECT ATIRADOR
   selAtirador.innerHTML='';
 
   atiradores.forEach((a,i)=>{
@@ -464,21 +497,166 @@ function atualizarTudo(){
   });
 
 
+
+  // HISTÓRICO
   tabelaHist.innerHTML='';
 
-  historico.forEach(h=>{
+  historico.forEach((h,index)=>{
 
     tabelaHist.innerHTML += `
       <tr>
+
         <td>${h.atirador}</td>
+
         <td>${h.item}</td>
+
         <td>${h.qtd}</td>
+
         <td>${h.tipo}</td>
+
         <td>${h.data}</td>
+
+        <td>
+
+          <button onclick="editarHistorico(${index})">
+            ✏️
+          </button>
+
+          <button onclick="excluirHistorico(${index})">
+            🗑️
+          </button>
+
+        </td>
+
       </tr>
     `;
 
   });
+
+}
+  // ATIRADORES
+
+function excluirAtirador(index){
+
+  if(confirm("Excluir atirador?")){
+
+    atiradores.splice(index,1);
+
+    salvar();
+
+    atualizarTudo();
+
+  }
+
+}
+
+
+function editarAtirador(index){
+
+  let novoNome = prompt(
+    "Novo nome:",
+    atiradores[index].nome
+  );
+
+  let novoNumero = prompt(
+    "Novo número:",
+    atiradores[index].numero
+  );
+
+  if(novoNome && novoNumero){
+
+    atiradores[index].nome = novoNome;
+
+    atiradores[index].numero = novoNumero;
+
+    salvar();
+
+    atualizarTudo();
+
+  }
+
+}
+
+
+
+// ESTOQUE
+
+function excluirItem(index){
+
+  if(confirm("Excluir item?")){
+
+    estoque.splice(index,1);
+
+    salvar();
+
+    atualizarTudo();
+
+  }
+
+}
+
+
+function editarItem(index){
+
+  let novoNome = prompt(
+    "Novo nome:",
+    estoque[index].nome
+  );
+
+  let novaQtd = prompt(
+    "Nova quantidade:",
+    estoque[index].qtd
+  );
+
+  if(novoNome && novaQtd){
+
+    estoque[index].nome = novoNome;
+
+    estoque[index].qtd = parseInt(novaQtd);
+
+    salvar();
+
+    atualizarTudo();
+
+  }
+
+}
+
+
+
+// HISTÓRICO
+
+function excluirHistorico(index){
+
+  if(confirm("Excluir registro?")){
+
+    historico.splice(index,1);
+
+    salvar();
+
+    atualizarTudo();
+
+  }
+
+}
+
+
+function editarHistorico(index){
+
+  let novaQtd = prompt(
+    "Nova quantidade:",
+    historico[index].qtd
+  );
+
+  if(novaQtd){
+
+    historico[index].qtd = parseInt(novaQtd);
+
+    salvar();
+
+    atualizarTudo();
+
+  }
 
 }
 
