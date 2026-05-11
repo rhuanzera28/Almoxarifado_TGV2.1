@@ -1,34 +1,143 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Almoxarifado TG</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#7b8d57;
+}
+
+.login-box{
+
+    width:350px;
+
+    background:#ffffff;
+
+    border-radius:12px;
+
+    padding:30px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,0.25);
+
+    text-align:center;
+}
+
+h1{
+
+    margin-bottom:25px;
+
+    color:#1f1f1f;
+
+    font-size:20px;
+}
+
+label{
+
+    display:block;
+
+    text-align:left;
+
+    margin-top:15px;
+
+    margin-bottom:5px;
+
+    color:#333;
+}
+
+input{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:6px;
+
+    font-size:15px;
+}
+
+.botao{
+
+    width:100%;
+
+    margin-top:25px;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:6px;
+
+    background:#b5d334;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+.botao:hover{
+
+    transform:scale(1.02);
+}
+
+</style>
+
 </head>
 
 <body>
 
-<header>
-    Login Almoxarifado TG
-</header>
 
-<container>
-    <inputs>
+<div class="login-box">
 
-        <label>Digite o nome do usuário:</label><br>
-        <input id="usuario" type="text"><br>
+    <h1>Login Almoxarifado TG</h1>
 
-        <label>Digite sua senha:</label><br>
-        <input type="password"><br>
+    <label>Digite o nome do usuário:</label>
 
-        <input
-            class="enviar"
-            type="submit"
-            onclick="window.location.href='estoque.html'"
-        >
+    <input
+        id="usuario"
+        type="text"
+        placeholder="Usuário"
+    >
 
-    </inputs>
-</container>
+
+    <label>Digite sua senha:</label>
+
+    <input
+        type="password"
+        placeholder="Senha"
+    >
+
+
+    <button
+        class="botao"
+        onclick="window.location.href='estoque.html'"
+    >
+
+        Enviar
+
+    </button>
+
+</div>
+
 
 </body>
 </html>
