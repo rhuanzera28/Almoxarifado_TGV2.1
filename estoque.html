@@ -1,306 +1,268 @@
-<!-- VERSÃO 2.1 CORRIGIDA -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Almoxarifado TG 2.1</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Almoxarifado TG 2.5</title>
 <style>
-body{margin:0;font-family:Arial;background:#1b1f1b;color:white}
-header{background:#3b5323;padding:15px;text-align:center;font-size:22px}
+*{box-sizing:border-box;font-family:Arial;margin:0;padding:0}
+body{background:#1b1f1b;color:#fff}
+header{background:#3b5323;padding:15px;text-align:center;font-size:22px;font-weight:bold}
 .container{display:flex}
-.sidebar{width:230px;background:#2e3d2e;min-height:100vh}
-.sidebar button{width:100%;padding:12px;background:none;border:none;color:white;text-align:left;cursor:pointer}
+.sidebar{width:240px;background:#2e3d2e;min-height:100vh}
+.sidebar button{width:100%;padding:12px;background:none;border:none;color:#fff;text-align:left;cursor:pointer}
 .sidebar button:hover{background:#3b5323}
 .content{flex:1;padding:20px}
 .card{background:#2e3d2e;padding:15px;border-radius:8px;margin-bottom:15px}
-input,select{width:100%;padding:8px;margin:5px 0;border-radius:5px;border:none}
-button.action{background:#4caf50;border:none;padding:10px;color:white;cursor:pointer;border-radius:5px}
+input,select{width:100%;padding:8px;margin:4px 0;border-radius:5px;border:none}
+button.action{background:#4caf50;color:#fff;border:none;padding:10px;border-radius:5px;cursor:pointer;margin-top:10px}
 table{width:100%;border-collapse:collapse}
 th,td{border:1px solid #555;padding:8px}
-.alerta{color:yellow;font-weight:bold}
+.hidden{display:none}
+.alerta{color:#ffd700;font-weight:bold}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{background:#3b5323;padding:15px;text-align:center;border-radius:8px}
 </style>
 </head>
-
 <body>
-
-<header>Sistema TG 2.1</header>
-
+<header>Sistema de Almoxarifado TG 2.5</header>
 <div class="container">
-
 <div class="sidebar">
-<button onclick="show('dashboard')">📊 Dashboard</button>
-<button onclick="show('pessoas')">👤 Pessoas</button>
-<button onclick="show('estoque')">📦 Estoque</button>
-<button onclick="show('mov')">🔄 Movimentação</button>
-<button onclick="show('posse')">🎯 Em uso</button>
-<button onclick="show('historico')">📜 Histórico</button>
+<button onclick="showPage('dashboard')">📊 Dashboard</button>
+<button onclick="showPage('pessoas')">👤 Pessoas</button>
+<button onclick="showPage('estoque')">📦 Estoque</button>
+<button onclick="showPage('movimentacao')">🔄 Movimentação</button>
+<button onclick="showPage('uso')">🎯 Em uso</button>
+<button onclick="showPage('historico')">📜 Histórico</button>
+<button onclick="window.location.href='index.html'">🚪 Sair</button>
 </div>
-
 <div class="content">
 
-<!-- DASH -->
 <div id="dashboard" class="page">
-<div class="card">
-<h2>Resumo</h2>
-<p>Itens: <span id="dItens"></span></p>
-<p>Pessoas: <span id="dPessoas"></span></p>
-<p>Movimentações: <span id="dMov"></span></p>
+<div class="stats">
+<div class="stat">Pessoas<br><h2 id="dashPessoas">0</h2></div>
+<div class="stat">Itens<br><h2 id="dashItens">0</h2></div>
+<div class="stat">Em uso<br><h2 id="dashUso">0</h2></div>
+<div class="stat">Movimentações<br><h2 id="dashMov">0</h2></div>
 </div>
 </div>
 
-<!-- PESSOAS -->
-<div id="pessoas" class="page" style="display:none">
+<div id="pessoas" class="page hidden">
 <div class="card">
-<h2>Cadastrar Pessoa</h2>
-
-<input id="nomePessoa" placeholder="Nome">
-
-<select id="funcaoPessoa">
-<option>Atirador</option>
-<option>Limpeza</option>
-<option>Instrutor</option>
-<option>Outro</option>
+<h2>Cadastrar pessoa</h2>
+<input id="pNome" placeholder="Nome">
+<select id="pFuncao">
+<option>Atirador</option><option>Cabo</option><option>Monitor</option>
+<option>Instrutor</option><option>Sargento</option><option>Tenente</option>
+<option>Oficial</option><option>Auxiliar Administrativo</option>
+<option>Limpeza</option><option>Cozinha</option><option>Outro</option>
 </select>
-
-<input id="numeroPessoa" placeholder="Número (se for atirador)">
-
+<input id="pNumero" placeholder="Número militar (se aplicável)">
 <button class="action" onclick="addPessoa()">Cadastrar</button>
 </div>
-
-<div class="card">
-<ul id="listaPessoas"></ul>
-</div>
+<div class="card"><ul id="listaPessoas"></ul></div>
 </div>
 
-<!-- ESTOQUE -->
-<div id="estoque" class="page" style="display:none">
-
+<div id="estoque" class="page hidden">
 <div class="card">
-<h2>Cadastrar Item</h2>
-
-<input id="nomeItem" placeholder="Nome">
-
-<select id="tipoItem">
+<h2>Cadastrar item</h2>
+<input id="iNome" placeholder="Nome do item">
+<select id="iCategoria" onchange="categoriaMudou()">
 <option>Armamento</option>
 <option>Fardamento</option>
 <option>Equipamento</option>
+<option>Roupa TFM</option>
+<option>Boina</option>
+<option>Coturno</option>
 <option>Produto de Limpeza</option>
 <option>Outro</option>
 </select>
-
-<input id="qtdItem" type="number" placeholder="Quantidade">
-
+<div id="extraCampos"></div>
+<input id="iQtd" type="number" placeholder="Quantidade">
 <button class="action" onclick="addItem()">Cadastrar</button>
 </div>
-
 <div class="card">
+<input id="pesquisa" placeholder="Pesquisar item" onkeyup="renderAll()">
 <table>
-<thead>
-<tr><th>Item</th><th>Tipo</th><th>Qtd</th><th>Ações</th></tr>
-</thead>
-<tbody id="tabelaEstoque"></tbody>
+<thead><tr><th>ID</th><th>Nome</th><th>Categoria</th><th>Info</th><th>Qtd</th><th>Ações</th></tr></thead>
+<tbody id="tbEstoque"></tbody>
 </table>
 </div>
-
 </div>
 
-<!-- MOV -->
-<div id="mov" class="page" style="display:none">
+<div id="movimentacao" class="page hidden">
 <div class="card">
-
-<h3>Registrar retirada ou devolução</h3>
-
-<select id="selItem"></select>
-<select id="selPessoa"></select>
-
-<input id="qtdMov" type="number" placeholder="Quantidade">
-
-<select id="tipoMov">
-<option value="saida">Retirada</option>
-<option value="entrada">Devolução</option>
-</select>
-
+<h2>Registrar retirada/devolução</h2>
+<select id="mPessoa"></select>
+<select id="mItem"></select>
+<input id="mQtd" type="number" placeholder="Quantidade">
+<select id="mTipo"><option value="saida">Retirada</option><option value="entrada">Devolução</option></select>
 <button class="action" onclick="movimentar()">Registrar</button>
-
 </div>
 </div>
 
-<!-- POSSE -->
-<div id="posse" class="page" style="display:none">
+<div id="uso" class="page hidden">
 <div class="card">
 <table>
-<thead>
-<tr><th>Pessoa</th><th>Item</th><th>Qtd</th><th>Ações</th></tr>
-</thead>
-<tbody id="tabelaPosse"></tbody>
+<thead><tr><th>Pessoa</th><th>Item</th><th>Qtd</th><th>Ações</th></tr></thead>
+<tbody id="tbUso"></tbody>
 </table>
 </div>
 </div>
 
-<!-- HIST -->
-<div id="historico" class="page" style="display:none">
+<div id="historico" class="page hidden">
 <div class="card">
 <table>
-<thead>
-<tr><th>Pessoa</th><th>Item</th><th>Qtd</th><th>Tipo</th><th>Data</th></tr>
-</thead>
-<tbody id="tabelaHist"></tbody>
+<thead><tr><th>Pessoa</th><th>Item</th><th>Qtd</th><th>Tipo</th><th>Data</th><th>Ações</th></tr></thead>
+<tbody id="tbHistorico"></tbody>
 </table>
 </div>
 </div>
 
-</div>
-</div>
-
+</div></div>
 <script>
-
-let estoque = JSON.parse(localStorage.getItem("estoque"))||[];
-let pessoas = JSON.parse(localStorage.getItem("pessoas"))||[];
-let historico = JSON.parse(localStorage.getItem("historico"))||[];
-let posse = JSON.parse(localStorage.getItem("posse"))||[];
+let pessoas=JSON.parse(localStorage.getItem('pessoas'))||[];
+let estoque=JSON.parse(localStorage.getItem('estoque'))||[];
+let uso=JSON.parse(localStorage.getItem('uso'))||[];
+let historico=JSON.parse(localStorage.getItem('historico'))||[];
 
 function salvar(){
-localStorage.setItem("estoque",JSON.stringify(estoque));
-localStorage.setItem("pessoas",JSON.stringify(pessoas));
-localStorage.setItem("historico",JSON.stringify(historico));
-localStorage.setItem("posse",JSON.stringify(posse));
+localStorage.setItem('pessoas',JSON.stringify(pessoas));
+localStorage.setItem('estoque',JSON.stringify(estoque));
+localStorage.setItem('uso',JSON.stringify(uso));
+localStorage.setItem('historico',JSON.stringify(historico));
 }
 
-function show(id){
-document.querySelectorAll(".page").forEach(p=>p.style.display="none");
-document.getElementById(id).style.display="block";
-atualizar();
+function showPage(id){
+document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+document.getElementById(id).classList.remove('hidden');
+renderAll();
 }
+
+function categoriaMudou(){
+let cat=iCategoria.value;
+let html='';
+if(cat==='Armamento') html=`<input id='extra1' placeholder='Calibre'><input id='extra2' placeholder='Número de série'>`;
+else if(cat==='Fardamento' || cat==='Roupa TFM') html=`<select id='extra1'><option>P</option><option>M</option><option>G</option><option>GG</option></select>`;
+else if(cat==='Boina' || cat==='Coturno') html=`<input id='extra1' placeholder='Tamanho'>`;
+extraCampos.innerHTML=html;
+}
+categoriaMudou();
 
 function addPessoa(){
-pessoas.push({
-nome:nomePessoa.value,
-funcao:funcaoPessoa.value,
-numero:numeroPessoa.value
-});
-salvar();
-atualizar();
+pessoas.push({nome:pNome.value,funcao:pFuncao.value,numero:pNumero.value});
+salvar();renderAll();
 }
 
 function addItem(){
+let categoria=iCategoria.value;
+let qtd=parseInt(iQtd.value);
+let extra1=document.getElementById('extra1')?.value||'';
+let extra2=document.getElementById('extra2')?.value||'';
 
-let nome=nomeItem.value;
-let tipo=tipoItem.value;
-let qtd=parseInt(qtdItem.value);
-
-let existente=estoque.find(e=>e.nome==nome);
-
-if(existente){
-existente.qtd+=qtd;
-}else{
-estoque.push({nome,tipo,qtd,original:qtd});
+if(categoria==='Armamento'){
+for(let n=0;n<qtd;n++){
+estoque.push({
+id:'ARM-'+Date.now()+n,
+nome:iNome.value,
+categoria,
+qtd:1,
+original:1,
+info:`${extra1} | Série ${extra2}`
+});
 }
-
-salvar();
-atualizar();
+}else{
+let existe=estoque.find(x=>x.nome===iNome.value && x.info===extra1);
+if(existe) existe.qtd+=qtd;
+else estoque.push({
+id:'ITM-'+Date.now(),
+nome:iNome.value,
+categoria,
+qtd,
+original:qtd,
+info:extra1
+});
+}
+salvar();renderAll();
 }
 
 function movimentar(){
+let p=pessoas[mPessoa.value];
+let item=estoque[mItem.value];
+let qtd=parseInt(mQtd.value);
+let tipo=mTipo.value;
 
-let item=estoque[selItem.value];
-let pessoa=pessoas[selPessoa.value];
-let qtd=parseInt(qtdMov.value);
-
-if(tipoMov.value=="saida"){
-if(item.qtd<qtd)return alert("Sem estoque");
-
+if(tipo==='saida'){
+if(item.qtd<qtd) return alert('Sem estoque');
 item.qtd-=qtd;
-
-posse.push({pessoa:pessoa.nome,item:item.nome,qtd});
-}
-
-if(tipoMov.value=="entrada"){
+let posse=uso.find(x=>x.pessoa===p.nome && x.item===item.nome);
+if(posse) posse.qtd+=qtd;
+else uso.push({pessoa:p.nome,item:item.nome,qtd});
+}else{
 item.qtd+=qtd;
+let posse=uso.find(x=>x.pessoa===p.nome && x.item===item.nome);
+if(posse){
+posse.qtd-=qtd;
+if(posse.qtd<=0) uso=uso.filter(x=>x!==posse);
+}
 }
 
 historico.push({
-pessoa:pessoa.nome,
+pessoa:p.nome,
 item:item.nome,
 qtd,
-tipo:tipoMov.value,
+tipo,
 data:new Date().toLocaleString()
 });
 
+salvar();renderAll();
+}
+
+function renderAll(){
+dashPessoas.innerHTML=pessoas.length;
+dashItens.innerHTML=estoque.length;
+dashUso.innerHTML=uso.length;
+dashMov.innerHTML=historico.length;
+
+listaPessoas.innerHTML='';
+pessoas.forEach((p,i)=>{
+let num=p.numero?` Nº ${p.numero}`:'';
+listaPessoas.innerHTML+=`<li>${p.nome} - ${p.funcao}${num} <button onclick="editarPessoa(${i})">✏️</button> <button onclick="delPessoa(${i})">🗑️</button></li>`;
+});
+
+let busca=(pesquisa?.value||'').toLowerCase();
+tbEstoque.innerHTML='';
+estoque.forEach((e,i)=>{
+if(!e.nome.toLowerCase().includes(busca)) return;
+let alerta=e.qtd<e.original?' <span class="alerta">⚠</span>':'';
+tbEstoque.innerHTML+=`<tr><td>${e.id}</td><td>${e.nome}</td><td>${e.categoria}</td><td>${e.info}</td><td>${e.qtd}${alerta}</td><td><button onclick="editarItem(${i})">✏️</button> <button onclick="delItem(${i})">🗑️</button></td></tr>`;
+});
+
+mPessoa.innerHTML='';
+pessoas.forEach((p,i)=>mPessoa.innerHTML+=`<option value="${i}">${p.nome}</option>`);
+mItem.innerHTML='';
+estoque.forEach((e,i)=>mItem.innerHTML+=`<option value="${i}">${e.nome}</option>`);
+
+tbUso.innerHTML='';
+uso.forEach((u,i)=>tbUso.innerHTML+=`<tr><td>${u.pessoa}</td><td>${u.item}</td><td>${u.qtd}</td><td><button onclick="editarUso(${i})">✏️</button> <button onclick="delUso(${i})">🗑️</button></td></tr>`);
+
+ tbHistorico.innerHTML='';
+historico.forEach((h,i)=>tbHistorico.innerHTML+=`<tr><td>${h.pessoa}</td><td>${h.item}</td><td>${h.qtd}</td><td>${h.tipo}</td><td>${h.data}</td><td><button onclick="editarHistorico(${i})">✏️</button> <button onclick="delHistorico(${i})">🗑️</button></td></tr>`);
+
 salvar();
-atualizar();
 }
 
-function atualizar(){
+function editarPessoa(i){let n=prompt('Nome',pessoas[i].nome); if(n){pessoas[i].nome=n; renderAll();}}
+function delPessoa(i){pessoas.splice(i,1); renderAll();}
+function editarItem(i){let n=prompt('Nome',estoque[i].nome); if(n){estoque[i].nome=n; renderAll();}}
+function delItem(i){estoque.splice(i,1); renderAll();}
+function editarUso(i){let q=prompt('Quantidade',uso[i].qtd); if(q){uso[i].qtd=parseInt(q); renderAll();}}
+function delUso(i){uso.splice(i,1); renderAll();}
+function editarHistorico(i){let q=prompt('Quantidade',historico[i].qtd); if(q){historico[i].qtd=parseInt(q); renderAll();}}
+function delHistorico(i){historico.splice(i,1); renderAll();}
 
-dItens.innerHTML=estoque.length;
-dPessoas.innerHTML=pessoas.length;
-dMov.innerHTML=historico.length;
-
-listaPessoas.innerHTML="";
-pessoas.forEach((p,i)=>{
-listaPessoas.innerHTML+=`
-<li>${p.nome} - ${p.funcao}
-<button onclick="pessoas.splice(${i},1);salvar();atualizar()">🗑️</button>
-</li>`;
-});
-
-tabelaEstoque.innerHTML="";
-estoque.forEach((e,i)=>{
-
-let alerta=(e.qtd<e.original)?"<span class='alerta'>⚠</span>":"";
-
-tabelaEstoque.innerHTML+=`
-<tr>
-<td>${e.nome}</td>
-<td>${e.tipo}</td>
-<td>${e.qtd} ${alerta}</td>
-<td>
-<button onclick="estoque.splice(${i},1);salvar();atualizar()">🗑️</button>
-</td>
-</tr>`;
-});
-
-selItem.innerHTML="";
-estoque.forEach((e,i)=>{
-selItem.innerHTML+=`<option value="${i}">${e.nome}</option>`;
-});
-
-selPessoa.innerHTML="";
-pessoas.forEach((p,i)=>{
-selPessoa.innerHTML+=`<option value="${i}">${p.nome}</option>`;
-});
-
-tabelaPosse.innerHTML="";
-posse.forEach((p,i)=>{
-tabelaPosse.innerHTML+=`
-<tr>
-<td>${p.pessoa}</td>
-<td>${p.item}</td>
-<td>${p.qtd}</td>
-<td>
-<button onclick="posse.splice(${i},1);salvar();atualizar()">🗑️</button>
-</td>
-</tr>`;
-});
-
-tabelaHist.innerHTML="";
-historico.forEach(h=>{
-tabelaHist.innerHTML+=`
-<tr>
-<td>${h.pessoa}</td>
-<td>${h.item}</td>
-<td>${h.qtd}</td>
-<td>${h.tipo}</td>
-<td>${h.data}</td>
-</tr>`;
-});
-
-}
-
-atualizar();
-
+renderAll();
 </script>
-
 </body>
 </html>
+
